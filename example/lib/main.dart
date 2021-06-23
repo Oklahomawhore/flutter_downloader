@@ -164,14 +164,14 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   static void downloadCallback(
-      String id, DownloadTaskStatus status, int progress) {
+      String id, DownloadTaskStatus status, int progress, int speed, int downloaded, int total) {
     if (debug) {
       print(
           'Background Isolate Callback: task ($id) is in status ($status) and process ($progress)');
     }
     final SendPort send =
         IsolateNameServer.lookupPortByName('downloader_send_port')!;
-    send.send([id, status, progress]);
+    send.send([id, status, progress, speed, downloaded, total]);
   }
 
   @override
