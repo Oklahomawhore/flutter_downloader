@@ -67,6 +67,7 @@ public class DownloadWorker extends Worker implements MethodChannel.MethodCallHa
     public static final String ARG_OPEN_FILE_FROM_NOTIFICATION = "open_file_from_notification";
     public static final String ARG_CALLBACK_HANDLE = "callback_handle";
     public static final String ARG_DEBUG = "debug";
+    public static final String ARG_INTERVAL = "update_interval_milliseconds";
 
     private static final String TAG = DownloadWorker.class.getSimpleName();
     private static final int BUFFER_SIZE = 4096;
@@ -170,6 +171,7 @@ public class DownloadWorker extends Worker implements MethodChannel.MethodCallHa
         String savedDir = getInputData().getString(ARG_SAVED_DIR);
         String headers = getInputData().getString(ARG_HEADERS);
         boolean isResume = getInputData().getBoolean(ARG_IS_RESUME, false);
+        long updateInterval = getInputData().getLong(ARG_INTERVAL, 1000);
         debug = getInputData().getBoolean(ARG_DEBUG, false);
 
         Resources res = getApplicationContext().getResources();
@@ -202,7 +204,7 @@ public class DownloadWorker extends Worker implements MethodChannel.MethodCallHa
         }
 
         try {
-            downloadFile(context, url, savedDir, filename, headers, isResume);
+            downloadFile(context, url, savedDir, filename, headers, isResume, updateInterval);
             cleanUp();
             dbHelper = null;
             taskDao = null;
@@ -244,7 +246,7 @@ public class DownloadWorker extends Worker implements MethodChannel.MethodCallHa
         return downloadedBytes;
     }
 
-    private void downloadFile(Context context, String fileURL, String savedDir, String filename, String headers, boolean isResume) throws IOException {
+    private void downloadFile(Context context, String fileURL, String savedDir, String filename, String headers, boolean isResume, long interval) throws IOException {
         String url = fileURL;
         URL resourceUrl, base, next;
         Map<String, Integer> visited;
@@ -352,13 +354,13 @@ public class DownloadWorker extends Worker implements MethodChannel.MethodCallHa
                 int bytesRead = -1;
                 byte[] buffer = new byte[BUFFER_SIZE];
                 while ((bytesRead = inputStream.read(buffer)) != -1 && !isStopped()) {
-                    log("bytes write: " + bytesRead);
+                    long currentTime = System.currentTimeMillis();
                     count += bytesRead;
                     int progress = (int) ((count * 100) / (contentLength + downloadedBytes));
                     outputStream.write(buffer, 0, bytesRead);
 
-                    if (count != lastBytes || lastProgress != progress) {
-                        long speed  = (count - lastBytes) * 1000 / (System.currentTimeMillis() - lastTime); // Bytes per second
+                    if ((count != lastBytes || lastProgress != progress) && (currentTime - lastTime) > interval) {
+                        long speed  = (count - lastBytes) * 1000 / (currentTime - lastTime); // Bytes per second
                         lastProgress = progress;
                         lastTime = System.currentTimeMillis();
                         lastBytes = count;

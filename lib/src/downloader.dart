@@ -26,7 +26,7 @@ class FlutterDownloader {
   static const _channel = const MethodChannel('vn.hunghd/downloader');
   static bool _initialized = false;
 
-  static Future<Null> initialize({bool debug = true}) async {
+  static Future<Null> initialize({bool debug = true, int interval=1000}) async {
     assert(!_initialized,
         'FlutterDownloader.initialize() must be called only once!');
 
@@ -34,7 +34,7 @@ class FlutterDownloader {
 
     final callback = PluginUtilities.getCallbackHandle(callbackDispatcher)!;
     await _channel.invokeMethod(
-        'initialize', <dynamic>[callback.toRawHandle(), debug ? 1 : 0]);
+        'initialize', <dynamic>[callback.toRawHandle(), debug ? 1 : 0, interval]);
     _initialized = true;
     return null;
   }
