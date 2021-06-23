@@ -174,12 +174,14 @@ public class FlutterDownloaderPlugin implements MethodCallHandler, FlutterPlugin
         boolean showNotification = call.argument("show_notification");
         boolean openFileFromNotification = call.argument("open_file_from_notification");
         boolean requiresStorageNotLow = call.argument("requires_storage_not_low");
+        String applicationId = call.argument("application_id");
+        String extra = call.argument("extra");
         WorkRequest request = buildRequest(url, savedDir, filename, headers, showNotification, openFileFromNotification, false, requiresStorageNotLow);
         WorkManager.getInstance(context).enqueue(request);
         String taskId = request.getId().toString();
         result.success(taskId);
         sendUpdateProgress(taskId, DownloadStatus.ENQUEUED, 0);
-        taskDao.insertOrUpdateNewTask(taskId, url, DownloadStatus.ENQUEUED, 0, filename, savedDir, headers, showNotification, openFileFromNotification);
+        taskDao.insertOrUpdateNewTask(taskId, url, DownloadStatus.ENQUEUED, 0, filename, savedDir, headers, showNotification, openFileFromNotification, extra, applicationId);
     }
 
     private void loadTasks(MethodCall call, MethodChannel.Result result) {
@@ -194,6 +196,8 @@ public class FlutterDownloaderPlugin implements MethodCallHandler, FlutterPlugin
             item.put("file_name", task.filename);
             item.put("saved_dir", task.savedDir);
             item.put("time_created", task.timeCreated);
+            item.put("application_id", task.applicationId);
+            item.put("extra" , task.extra);
             array.add(item);
         }
         result.success(array);
@@ -212,6 +216,8 @@ public class FlutterDownloaderPlugin implements MethodCallHandler, FlutterPlugin
             item.put("file_name", task.filename);
             item.put("saved_dir", task.savedDir);
             item.put("time_created", task.timeCreated);
+            item.put("application_id", task.applicationId);
+            item.put("extra" , task.extra);
             array.add(item);
         }
         result.success(array);

@@ -11,13 +11,14 @@ public class DownloadTask {
     String headers;
     String mimeType;
     String extra;
+    String applicationId;
     boolean resumable;
     boolean showNotification;
     boolean openFileFromNotification;
     long timeCreated;
 
     DownloadTask(int primaryId, String taskId, int status, int progress, String url, String filename, String savedDir,
-                 String headers, String mimeType, boolean resumable, boolean showNotification, boolean openFileFromNotification, long timeCreated, String extra) {
+                 String headers, String mimeType, boolean resumable, boolean showNotification, boolean openFileFromNotification, long timeCreated, String extra, String applicationId) {
         this.primaryId = primaryId;
         this.taskId = taskId;
         this.status = status;
@@ -32,6 +33,7 @@ public class DownloadTask {
         this.openFileFromNotification = openFileFromNotification;
         this.timeCreated = timeCreated;
         this.extra = extra;
+        this.applicationId = applicationId;
     }
 
     @Override
