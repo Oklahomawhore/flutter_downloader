@@ -349,6 +349,7 @@ public class DownloadWorker extends Worker implements MethodChannel.MethodCallHa
                 int bytesRead = -1;
                 byte[] buffer = new byte[BUFFER_SIZE];
                 while ((bytesRead = inputStream.read(buffer)) != -1 && !isStopped()) {
+                    log("bytes write: " + bytesRead);
                     count += bytesRead;
                     int progress = (int) ((count * 100) / (contentLength + downloadedBytes));
                     outputStream.write(buffer, 0, bytesRead);
@@ -529,19 +530,19 @@ public class DownloadWorker extends Worker implements MethodChannel.MethodCallHa
             // If this is progress update, it's not much important if it is dropped because there're still incoming updates later
             // If this is the final update, it must be success otherwise the notification will be stuck at the processing state
             // In order to ensure the final one is success, we check and sleep a second if need.
-            if (System.currentTimeMillis() - lastCallUpdateNotification < 1000) {
-                if (finalize) {
-                    log("Update too frequently!!!!, but it is the final update, we should sleep a second to ensure the update call can be processed");
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    log("Update too frequently!!!!, this should be dropped");
-                    return;
-                }
-            }
+//            if (System.currentTimeMillis() - lastCallUpdateNotification < 1000) {
+//                if (finalize) {
+//                    log("Update too frequently!!!!, but it is the final update, we should sleep a second to ensure the update call can be processed");
+//                    try {
+//                        Thread.sleep(1000);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                } else {
+//                    log("Update too frequently!!!!, this should be dropped");
+//                    return;
+//                }
+//            }
             log("Update notification: {notificationId: " + primaryId + ", title: " + title + ", status: " + status + ", progress: " + progress + "}");
             NotificationManagerCompat.from(context).notify(primaryId, builder.build());
             lastCallUpdateNotification = System.currentTimeMillis();
