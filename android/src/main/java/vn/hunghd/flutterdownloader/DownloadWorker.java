@@ -254,6 +254,7 @@ public class DownloadWorker extends Worker implements MethodChannel.MethodCallHa
         String saveFilePath;
         String location;
         long downloadedBytes = 0;
+        long contentLength = 0;
         int responseCode;
         int times;
 
@@ -310,7 +311,7 @@ public class DownloadWorker extends Worker implements MethodChannel.MethodCallHa
 
             if ((responseCode == HttpURLConnection.HTTP_OK || (isResume && responseCode == HttpURLConnection.HTTP_PARTIAL)) && !isStopped()) {
                 String contentType = httpConn.getContentType();
-                long contentLength = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N ? httpConn.getContentLengthLong() : httpConn.getContentLength();
+                contentLength = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N ? httpConn.getContentLengthLong() : httpConn.getContentLength();
                 log("Content-Type = " + contentType);
                 log("Content-Length = " + contentLength);
 
@@ -398,12 +399,12 @@ public class DownloadWorker extends Worker implements MethodChannel.MethodCallHa
             } else {
                 DownloadTask task = taskDao.loadTask(getId().toString());
                 int status = isStopped() ? (task.resumable ? DownloadStatus.PAUSED : DownloadStatus.CANCELED) : DownloadStatus.FAILED;
-                updateNotification(context, filename == null ? fileURL : filename, status, -1, null, true, 0, 0, 0);
+                updateNotification(context, filename == null ? fileURL : filename, status, -1, null, true, 0, lastBytes, contentLength + downloadedBytes);
                 taskDao.updateTask(getId().toString(), status, lastProgress);
                 log(isStopped() ? "Download canceled" : "Server replied HTTP code: " + responseCode);
             }
         } catch (IOException e) {
-            updateNotification(context, filename == null ? fileURL : filename, DownloadStatus.FAILED, -1, null, true, 0, 0 ,0);
+            updateNotification(context, filename == null ? fileURL : filename, DownloadStatus.FAILED, -1, null, true, 0, lastBytes , contentLength + downloadedBytes);
             taskDao.updateTask(getId().toString(), DownloadStatus.FAILED, lastProgress);
             e.printStackTrace();
         } finally {
