@@ -357,8 +357,8 @@ public class DownloadWorker extends Worker implements MethodChannel.MethodCallHa
                     int progress = (int) ((count * 100) / (contentLength + downloadedBytes));
                     outputStream.write(buffer, 0, bytesRead);
 
-                    if (progress != lastProgress || count != lastBytes) {
-                        long speed  = (count - lastBytes) / (System.currentTimeMillis() - lastTime);
+                    if (count != lastBytes || lastProgress != progress) {
+                        long speed  = (count - lastBytes) * 1000 / (System.currentTimeMillis() - lastTime); // Bytes per second
                         lastProgress = progress;
                         lastTime = System.currentTimeMillis();
                         lastBytes = count;
