@@ -52,6 +52,8 @@ class DownloadTask {
   final String? filename;
   final String savedDir;
   final int timeCreated;
+  final String? applicationId;
+  final String? extra;
 
   DownloadTask(
       {required this.taskId,
@@ -60,7 +62,7 @@ class DownloadTask {
       required this.url,
       required this.filename,
       required this.savedDir,
-      required this.timeCreated});
+      required this.timeCreated, this.applicationId, this.extra});
 
   @override
   String toString() =>
