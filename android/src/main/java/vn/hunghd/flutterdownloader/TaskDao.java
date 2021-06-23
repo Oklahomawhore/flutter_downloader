@@ -25,7 +25,8 @@ public class TaskDao {
             TaskContract.TaskEntry.COLUMN_NAME_OPEN_FILE_FROM_NOTIFICATION,
             TaskContract.TaskEntry.COLUMN_NAME_SHOW_NOTIFICATION,
             TaskContract.TaskEntry.COLUMN_NAME_TIME_CREATED,
-            TaskContract.TaskEntry.COLUMN_NAME_EXTRA
+            TaskContract.TaskEntry.COLUMN_NAME_EXTRA,
+            TaskContract.TaskEntry.COLUMN_NAME_APPLICATION_ID
     };
 
     public TaskDao(TaskDbHelper helper) {
