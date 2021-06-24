@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import vn.hunghd.flutterdownloader.TaskContract.TaskEntry;
 
 public class TaskDbHelper extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 5;
     public static final String DATABASE_NAME = "download_tasks.db";
 
     private static TaskDbHelper instance = null;
@@ -27,6 +27,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                     TaskEntry.COLUMN_NAME_SHOW_NOTIFICATION + " TINYINT DEFAULT 0, " +
                     TaskEntry.COLUMN_NAME_OPEN_FILE_FROM_NOTIFICATION + " TINYINT DEFAULT 0, " +
                     TaskEntry.COLUMN_NAME_TIME_CREATED + " INTEGER DEFAULT 0, " +
+                    TaskEntry.COLUMN_NAME_TOTAL_BYTES + " INTEGER DEFAULT 0, " +
                     TaskEntry.COLUMN_NAME_APPLICATION_ID + " VARCHAR(256), " +
                     TaskEntry.COLUMN_NAME_EXTRA + " TEXT"
                     + ")";

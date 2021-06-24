@@ -25,6 +25,7 @@ public class TaskDao {
             TaskContract.TaskEntry.COLUMN_NAME_OPEN_FILE_FROM_NOTIFICATION,
             TaskContract.TaskEntry.COLUMN_NAME_SHOW_NOTIFICATION,
             TaskContract.TaskEntry.COLUMN_NAME_TIME_CREATED,
+            TaskContract.TaskEntry.COLUMN_NAME_TOTAL_BYTES,
             TaskContract.TaskEntry.COLUMN_NAME_EXTRA,
             TaskContract.TaskEntry.COLUMN_NAME_APPLICATION_ID
     };
@@ -179,12 +180,13 @@ public class TaskDao {
         }
     }
 
-    public void updateTask(String taskId, String filename, String mimeType) {
+    public void updateTask(String taskId, String filename, String mimeType, Long contentLength) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(TaskContract.TaskEntry.COLUMN_NAME_FILE_NAME, filename);
         values.put(TaskContract.TaskEntry.COLUMN_NAME_MIME_TYPE, mimeType);
+        values.put(TaskContract.TaskEntry.COLUMN_NAME_TOTAL_BYTES, contentLength);
 
         db.beginTransaction();
         try {
@@ -227,10 +229,11 @@ public class TaskDao {
         int showNotification = cursor.getShort(cursor.getColumnIndexOrThrow(TaskContract.TaskEntry.COLUMN_NAME_SHOW_NOTIFICATION));
         int clickToOpenDownloadedFile = cursor.getShort(cursor.getColumnIndexOrThrow(TaskContract.TaskEntry.COLUMN_NAME_OPEN_FILE_FROM_NOTIFICATION));
         long timeCreated = cursor.getLong(cursor.getColumnIndexOrThrow(TaskContract.TaskEntry.COLUMN_NAME_TIME_CREATED));
+        Long totalBytes = cursor.getLong(cursor.getColumnIndexOrThrow(TaskContract.TaskEntry.COLUMN_NAME_TOTAL_BYTES));
         String extra = cursor.getString(cursor.getColumnIndexOrThrow(TaskContract.TaskEntry.COLUMN_NAME_EXTRA));
         String applicationId = cursor.getString(cursor.getColumnIndexOrThrow(TaskContract.TaskEntry.COLUMN_NAME_APPLICATION_ID));
         return new DownloadTask(primaryId, taskId, status, progress, url, filename, savedDir, headers,
-                mimeType, resumable == 1, showNotification == 1, clickToOpenDownloadedFile == 1, timeCreated, extra, applicationId);
+                mimeType, resumable == 1, showNotification == 1, clickToOpenDownloadedFile == 1, timeCreated, extra, applicationId, totalBytes);
     }
 
 }
