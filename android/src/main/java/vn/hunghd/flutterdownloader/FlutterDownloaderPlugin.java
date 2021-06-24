@@ -202,6 +202,7 @@ public class FlutterDownloaderPlugin implements MethodCallHandler, FlutterPlugin
             item.put("file_name", task.filename);
             item.put("saved_dir", task.savedDir);
             item.put("time_created", task.timeCreated);
+            item.put("total_bytes", task.totalBytes);
             item.put("application_id", task.applicationId);
             item.put("extra" , task.extra);
             array.add(item);
@@ -222,6 +223,7 @@ public class FlutterDownloaderPlugin implements MethodCallHandler, FlutterPlugin
             item.put("file_name", task.filename);
             item.put("saved_dir", task.savedDir);
             item.put("time_created", task.timeCreated);
+            item.put("total_bytes", task.totalBytes);
             item.put("application_id", task.applicationId);
             item.put("extra" , task.extra);
             array.add(item);
