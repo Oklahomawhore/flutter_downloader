@@ -121,7 +121,10 @@ class FlutterDownloader {
               url: item['url'],
               filename: item['file_name'],
               savedDir: item['saved_dir'],
-              timeCreated: item['time_created'], applicationId: item['application_id'], extra: item['extra']))
+              timeCreated: item['time_created'],
+              applicationId: item['application_id'],
+              extra: item['extra'],
+              totalBytes: item['total_bytes']))
           .toList();
     } on PlatformException catch (e) {
       print(e.message);
@@ -164,7 +167,10 @@ class FlutterDownloader {
               url: item['url'],
               filename: item['file_name'],
               savedDir: item['saved_dir'],
-              timeCreated: item['time_created'], applicationId: item['application_id'], extra: item['extra']))
+              timeCreated: item['time_created'],
+              applicationId: item['application_id'],
+              extra: item['extra'],
+              totalBytes: item['total_bytes']))
           .toList();
     } on PlatformException catch (e) {
       print(e.message);
